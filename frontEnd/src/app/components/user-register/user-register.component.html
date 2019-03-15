@@ -1,0 +1,61 @@
+<div class="container pt-2 float-left col-md-12">
+  <div class="container bg-secondary col-md-10 shadow-lg pl-5 float-left border">
+     <br>
+     <div class="row bg-light col-md-12 p-1 border">
+        <p class="col-md-12">User Registration Form</p>
+     </div>
+     <br>
+      <form [formGroup]="createForm">
+        <div class="row col-md-10">
+          <div class="col col-md-4 float-left">
+             <label>First Name </label>
+          </div>
+          <div class="col col-md-8 float-right">
+            <input type="text" class="form-control bg-light" formControlName="firstName" #firstName placeholder="First Name" name="firstName">
+          </div>
+        </div>
+        <br>
+        <div class="row col-md-10">
+          <div class="col col-md-4 float-left">
+            <label>Last Name</label>
+          </div>
+          <div class="col col-md-8 float-right">              
+            <input type="text" class="form-control bg-light" formControlName="lastName" #lastName placeholder="Last Name" name="lastName">
+          </div>
+        </div>
+        <br>
+        <div class="row col-md-10">
+          <div class="col col-md-4 float-left">
+            <label for="email">Email</label>
+          </div>
+          <div class="col col-md-8 float-right">
+            <input type="email" class="form-control bg-light" formControlName="email" #email placeholder="Email" name="email">
+          </div>
+        </div>
+        <br>
+        <div class="row col-md-10">
+          <div class="col col-md-4 float-left">
+            <label for="ssoId">SSO ID</label>
+          </div>
+          <div class="col col-md-8 float-right">  
+           <input type="text" class="form-control bg-light" formControlName="ssoId" #ssoId placeholder="SSO ID" name="ssoId">
+          </div>
+        </div>
+        <br>
+        <div class="row col-md-3 float-right">
+          <div class="col col-md-5">
+            <button type="submit" class="btn btn-primary" (click)="addUser(firstName.value, lastName.value, email.value, ssoId.value)">Register</button>
+          </div>
+          <div class="col col-md-1">  
+            <p>or</p>
+          </div>
+          <div class="col col-md-1">  
+            <a href="" routerlink="/userList">Cancel</a>
+          </div>
+        </div>
+        <br>
+        <br>
+      </form>
+  </div>
+</div>
+

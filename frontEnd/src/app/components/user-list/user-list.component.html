@@ -1,0 +1,37 @@
+<div class="container pt-2 float-left col-md-10">
+  <div class="container bg-secondary col-md-8 shadow-lg pl-5 float-left">
+    <div class="row p-2">
+      <div class="row bg-light col-md-12 border pl-1">
+        <p class="col-md-12">List of Users<p>
+      </div>
+
+      <div class="row bg-white col-md-12 border pl-1">
+        <div class="container p-1">
+          <table class="table col-md-12 border ">
+            <thead>
+              <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
+                <th>SSO ID</th>
+              </tr>
+            </thead>
+            <tbody class="border border-0">
+              <tr *ngFor ="let userData of userlist">
+                <td>{{userData.firstName }}</td>
+                <td>{{userData.lastName }}</td>
+                <td>{{userData.email }}</td>
+                <td>{{userData.ssoId }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+     <div class="row p-2">
+        <div class="row bg-light col-md-12 border pl-1">
+          <a class="col-md-12" routerLink="/userRegister">Add New User</a>
+        </div>  
+      </div>
+    </div>
+</div>
