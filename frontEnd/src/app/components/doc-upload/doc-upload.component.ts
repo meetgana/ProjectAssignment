@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { UsersService } from '../../users.service';
 
 @Component({
@@ -9,9 +9,8 @@ import { UsersService } from '../../users.service';
 })
 export class DocUploadComponent implements OnInit {
 
-  constructor(private UsersService: UsersService, private router: Router, 
-    private Activatedroute: ActivatedRoute) {
-      
+  constructor(private UsersService: UsersService, private router: Router) {
+
      }
 
   ngOnInit() {

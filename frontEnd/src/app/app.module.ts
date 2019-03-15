@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'userList', component: UserListComponent},
   { path: 'userRegister', component: UserRegisterComponent},
   { path: 'regSuccess', component: RegSuccessComponent, data: {firstName :'firstname', lastName:'lastname'}},
-  { path: 'docUpload/:firstName/:lastName', component: DocUploadComponent},
+  { path: 'docUpload', component: DocUploadComponent},
   { path: '', redirectTo: '/userList', pathMatch: 'full'}
 ];
 
