@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { User } from './user.model';
+import { File } from './file.model';
 
 @Injectable ({
   providedIn: 'root'
@@ -32,4 +33,12 @@ export class UsersService {
     return this.http.post(`${this.uri}/users/add`, users);
   }
 
+  downloadFile(filename, filetype): any {
+    return this.http.get("${this.uri}/file/" + filename,
+    { responseType: 'blob' });
+  }
+
+  showFileNames() {
+    return this.http.get<File[]>(`${this.uri}/files/`);
+  }
 }

@@ -11,7 +11,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { UsersService } from './users.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+// import { FileSelectDirective } from 'ng2-file-upload';
+import { FileUploadModule } from 'ng2-file-upload';
+
 
 const routes: Routes = [
   { path: 'userList', component: UserListComponent},
@@ -37,7 +40,9 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     HttpClientModule,
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule,
+    FileUploadModule
   ],
   providers: [UsersService],
   bootstrap: [AppComponent]

@@ -1,3 +1,31 @@
-<p>
-  doc-upload works!
-</p>
+<div class="container">
+  <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>File Name</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of files">
+          <td>{{ file.filename }}</td>
+          <td><button class="btn btn-primary button" (click)="downloadFile(file.filename, file.contentType)">Download</button></td>
+        </tr>   
+      </tbody>
+    </table>
+</div>
+
+
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-4">
+        <br>
+        <form (ngSubmit)="docUpload()">
+                  <input type="file" name="file" ng2FileSelect [uploader]="uploader"  />
+                  <button type="button" class="btn btn-success" (click)="uploader.uploadAll()">Upload</button>
+          </form>
+      </div>
+  </div>
+  <br>
+</div>
