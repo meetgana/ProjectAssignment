@@ -4,6 +4,7 @@ import { UsersService } from '../../users.service';
 import { FileUploader } from 'ng2-file-upload';
 import { Observable } from 'rxjs/Observable';
 import { File } from '../../file.model';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-doc-upload',
@@ -24,6 +25,7 @@ export class DocUploadComponent implements OnInit {
      this.uploader.onCompleteItem = (item: any, response: any, status: any, headers: any) => {
           console.log('ImageUpload:uploaded:', item, status, response);
           alert('File uploaded successfully');
+          this.showAllFiles();
       };
 
       this.showAllFiles();
@@ -36,12 +38,14 @@ export class DocUploadComponent implements OnInit {
   }
 
   downloadFile(filename, contentType) {
-    this.UsersService.downloadFile(filename, contentType).subscribe(
+    this.UsersService.downloadaFile(filename, contentType).subscribe(
       (res) => {
-        const file = new Blob([res.blob()], { type: contentType });
-      const fileURL = URL.createObjectURL(file);
+        var file = new Blob([res.body], { type: contentType });
+        console.log ("length: ", res.body.length);
+      /*const fileURL = URL.createObjectURL(file);
       window.open(fileURL);
-      }
-    );
+      */
+     saveAs(file);
+      });
   }
 }

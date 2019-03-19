@@ -1,31 +1,78 @@
-<div class="container">
-  <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>File Name</th>
-          <th>Link</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let file of files">
-          <td>{{ file.filename }}</td>
-          <td><button class="btn btn-primary button" (click)="downloadFile(file.filename, file.contentType)">Download</button></td>
-        </tr>   
-      </tbody>
-    </table>
-</div>
-
-
-
-<div class="container">
-  <div class="row">
-      <div class="col-md-4">
-        <br>
-        <form (ngSubmit)="docUpload()">
-                  <input type="file" name="file" ng2FileSelect [uploader]="uploader"  />
-                  <button type="button" class="btn btn-success" (click)="uploader.uploadAll()">Upload</button>
-          </form>
+<div class="container pt-2 float-left col-md-14">
+  <div class="container bg-secondary col-md-12 shadow-lg pl-5 float-left">
+    <br>
+      <div class="row bg-light col-md-12 border pl-1">
+        <p class="col-md-12 pt-2">List of Documents<p>
       </div>
-  </div>
+    <div class="row bg-white col-md-12 border pl-1">
+      <table class="table table-hover">
+         <thead>
+            <tr>
+              <th>No.</th>
+              <th>File Name</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th></th>
+              <th></th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let file of files">
+            <td>1</td>
+            <td>{{ file.filename }}</td>
+            <td>{{ file.contentType }}</td>
+            <td>File Description</td>
+            <td><button class="btn btn-primary button" (click)="downloadFile(file.filename, file.contentType)">Download</button></td>
+            <td>Delete Button</td>
+          </tr>   
+        </tbody>
+      </table>
+    </div>
+
   <br>
+  <div class="row bg-light col-md-12 border pl-1">
+      <p class="col-md-12 pt-2">Upload New Document<p>
+  </div>
+  <form (ngSubmit)="docUpload()">
+      <div class="row col-md-12 pl-1" style="background-color: rgb(255, 222, 173)" > <!--style="background-color: rgb(255, 222, 173)"-->
+        <div class="container col-md-12 float-left" >
+          <div class="row col-md-12" >
+            <div class="col col-md-4 float-left pt-2">
+               <label>Upload a document</label>
+            </div>
+            <div class="col col-md-8 float-right pt-2">
+              <input type="file" class="bg-light col col-md-10 float-left" name="file" ng2FileSelect [uploader]="uploader"  />
+            </div>
+          </div>
+
+          <div class="row col-md-12" > <!--style="background-color: rgb(255, 222, 173)"-->
+            <div class="col col-md-4 float-left pt-2">
+              <label>Description</label>
+            </div>
+            <div class="col col-md-8 float-right pt-2">
+              <input type="text" class="bg-light col col-md-10 float-left" #description  name="description"/>
+            </div>
+          </div> 
+
+          <div class="row col-md-16 pl-1" > <!--style="background-color: rgb(255, 222, 173)"-->
+            <div class="col col-md-16 float-right pt-2">
+                <button type="button" class="btn btn-primary float-right" (click)="uploader.uploadAll()">Upload</button>
+            </div>
+          </div>
+
+          <div class="row col-md-16 pl-1" > <!--style="background-color: rgb(255, 222, 173)"-->
+            <div class="col col-md-16 float-right pt-2">
+            </div>
+          </div>
+        </div>
+      </div>  
+    </form>
+
+    <br>
+    <div class="row bg-light col-md-12 border p-1">
+        <a href="" class="text-primary" routerlink="/userList">Go to User List</a>
+    </div>
+    <br>
+</div>
+<br>
 </div>

@@ -5,6 +5,7 @@ var Users = require ('./models/users.js');
 let multer = require('multer');
 let GridFsStorage = require('multer-gridfs-storage');
 let Grid = require('gridfs-stream');
+var fs = require('fs');
 
 let app = express();
 let router = express.Router();
@@ -20,6 +21,7 @@ app.use((req, res, next) => {
 
 mongoose.connect('mongodb://localhost:27017/users');
 let connection = mongoose.connection;
+connection.options = {};
 
 /* connection.once('open', () => {
     console.log('MongoDB database connection established successfully!');
@@ -60,7 +62,11 @@ let gfs = new Grid(connection, mongoose.mongo);
 
     filename: function(req, file, cb) {
        cb(null, file.originalname);
-    }
+    },
+
+    metadata: function(req, file, cb) {
+        cb(null, file.description);
+     },
 });
 
 let upload = multer({
@@ -81,9 +87,8 @@ router.post('/upload', function (req, res) {
 });
 
 router.route('/file/:filename').get((req, res) => {
- //   gfs.collection('uploadFiles'); //set collection name to lookup into
+    console.log ("Input file ", req.params.filename);
 
-    // First check if file exists
     gfs.files.find({filename: req.params.filename}).toArray(function(err, files){
         if(!files || files.length === 0){
             return res.status(404).json({
@@ -91,15 +96,21 @@ router.route('/file/:filename').get((req, res) => {
                 responseMessage: "error"
             });
         }
+
+        console.log("files: ",files[0].filename);
         // create read stream
+    /*    const gridFSBucket = new mongoose.mongo.GridFSBucket(connection.db);
+        var readStream = gridFSBucket.openDownloadStreamByName(files[0].filename).
+                  pipe(fs.createReadStream('writefile'));
+        return readStream.pipe(res);
+        */
         var readstream = gfs.createReadStream({
-            originalname: file[0].metadata.originalname,
-            root: "uploadFiles"
+            filename: files[0].filename
         });
         // set the proper content type 
         res.set('Content-Type', files[0].contentType)
         // Return response
-        return readstream.pipe(res);
+        return readstream.pipe(res); 
     });
 });
 
@@ -118,7 +129,6 @@ router.route('/files').get((req, res) => {
             });
         }
 
-        console.log(files);
         // Loop through all the files and fetch the necessary information
         files.forEach((file) => {
             filesData[count++] = {

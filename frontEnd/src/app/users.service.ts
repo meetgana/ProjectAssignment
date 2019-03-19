@@ -33,8 +33,8 @@ export class UsersService {
     return this.http.post(`${this.uri}/users/add`, users);
   }
 
-  downloadFile(filename, filetype): any {
-    return this.http.get("${this.uri}/file/" + filename,
+  downloadaFile(filename, filetype): any {
+    return this.http.get(`${this.uri}/file/` + filename,
     { responseType: 'blob' });
   }
 
