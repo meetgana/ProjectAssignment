@@ -64,7 +64,7 @@ let gfs = new Grid(connection.db, mongoose.mongo);
         return {
             filename: file.originalname,
             metadata: req.body
-       };
+        }
     }    
 });
 //root: "uploadFiles"
@@ -76,7 +76,7 @@ let upload = multer({
 // Route for file upload
 router.post('/upload', function (req, res) {
     upload(req,res, (err) => {
-        console.log ("description ", req.body);
+        console.log ("description ", req);
         if(err){
             res.json({error_code:1,err_desc:err});
             return;
@@ -86,7 +86,6 @@ router.post('/upload', function (req, res) {
 });
 
 router.route('/file/:filename').get((req, res) => {
-    console.log ("Input file ", req.params.filename);
     let gfs = new Grid(connection.db, mongoose.mongo);
     gfs.files.find({filename: req.params.filename}).toArray(function(err, outputFile){
         if(!outputFile || outputFile.length === 0){
@@ -95,9 +94,6 @@ router.route('/file/:filename').get((req, res) => {
                 responseMessage: "error"
             });
         }
-        console.log("files: ", outputFile[0].filename.toString());
-        console.log("file id: ", outputFile[0]._id);
-        console.log("files: ",outputFile.length);
 
         var readstream = gfs.createReadStream({
             filename: outputFile[0].filename.toString()        
@@ -105,49 +101,59 @@ router.route('/file/:filename').get((req, res) => {
 
         readstream.on('open',function(){
             console.log("start..");
-        });//open
+        });
         
         readstream.on('data',function(chunk){
             console.log('loading..');
-        });//loading
+        });
         
         readstream.on("end",function(){
           console.log("ready");
-        });//end 
+        }); 
 
         readstream.on('error', function (err) {
             console.log('An error occurred!', err);
         });
 
-        // res.set ('filename', files[0].filename);
         res.set('Content-Type', outputFile[0].contentType);
         return readstream.pipe(res);
     });
 });
 
-// Route for getting all the files
 router.route('/files').get((req, res) => {
     let filesData = [];
     let count = 0;
 
     gfs.files.find({}).toArray((err, files) => {
-        // Error checking
         if(!files || files.length === 0){
-            return res.status(404).json({
+            return res.status(408).json({
                 responseCode: 1,
                 responseMessage: "error"
             });
         }
 
-        // Loop through all the files and fetch the necessary information
-        files.forEach((file) => {
-            filesData[count++] = {
-                description: file.metadata.description,
-                filename: file.filename,
-                contentType: file.contentType
-            }
-        });
-        res.json(filesData);
+    files.forEach((file) => {
+        filesData[count++] = {
+            description: file.metadata.Description,
+            filename: file.filename,
+            contentType: file.contentType
+        }
+    });
+    res.json(filesData);
+   });
+});
+
+router.route('/delete/:filename').get((req, res) => {
+    let gfs = new Grid(connection.db, mongoose.mongo);
+    gfs.files.remove({filename: req.params.filename}, function(err){
+        if(err){
+            return res.status(409).json({
+                responseCode: 1,
+                responseMessage: "error"
+            });
+        }
+        console.log ("file deleted");
+        res.status(202).json({status : 'File Deteted'});
     });
 });
 

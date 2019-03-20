@@ -17,8 +17,8 @@
             </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let file of files">
-            <td>1</td>
+          <tr *ngFor="let file of files; let i = index">
+            <td>{{ i+1 }}</td>
             <td>{{ file.filename }}</td>
             <td>{{ file.contentType }}</td>
             <td>{{ file.description }}</td>
@@ -41,7 +41,7 @@
                <label>Upload a document</label>
             </div>
             <div class="col col-md-8 float-right pt-2">
-              <input type="file" class="bg-light col col-md-10 float-left" name="file" ng2FileSelect [uploader]="uploader"  />
+              <input type="file" class="bg-light col col-md-10 float-left" name="file" ng2FileSelect [uploader]="uploader">
             </div>
           </div>
 
@@ -56,7 +56,8 @@
 
           <div class="row col-md-16 pl-1" > 
             <div class="col col-md-16 float-right pt-2">
-                <button type="button" class="btn btn-primary float-right" (click)="description.value; uploader.uploadAll();">Upload</button>
+              <button type="button" class="btn btn-primary float-right" (click)="uploadFile(description.value)">Upload</button>
+<!--              <button type="button" class="btn btn-primary float-right" (click)="description.value; uploader.uploadAll();">Upload</button> -->
             </div>
           </div>
 

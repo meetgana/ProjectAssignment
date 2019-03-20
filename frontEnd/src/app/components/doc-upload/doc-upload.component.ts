@@ -29,7 +29,11 @@ export class DocUploadComponent implements OnInit {
       contentType: ''
   };
 
-     this.uploader = new FileUploader({
+  this.uploader = new FileUploader({
+    url: this.url
+    })
+
+/*     this.uploader = new FileUploader({
                             url: this.url,
                             additionalParameter: {
                               description: this.fileForm.description
@@ -44,7 +48,7 @@ export class DocUploadComponent implements OnInit {
           console.log('ImageUpload:uploaded:', item, status, response);
           alert('File uploaded successfully');
           this.showAllFiles();
-      };
+     }; */
 
       this.showAllFiles();
   }
@@ -54,6 +58,21 @@ export class DocUploadComponent implements OnInit {
      this.files = response;
     });
   }
+
+  uploadFile(Description) {
+  this.uploader.options.additionalParameter = {
+     Description
+  };
+  console.log(this.uploader.options.additionalParameter);
+  this.uploader.uploadAll();
+
+  this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
+  this.uploader.onCompleteItem = (item: any , response: any, status: any, headers: any) => {
+    console.log('ImageUpload:uploaded:', item, status, response);
+    alert('File uploaded successfully');
+    this.showAllFiles();
+  }
+}
 
   downloadFile(filename, contentType) {
     this.UsersService.downloadaFile(filename, contentType).subscribe(
@@ -65,7 +84,9 @@ export class DocUploadComponent implements OnInit {
   }
 
   deleteFile(filename) {
+    console.log ('file to delete ', filename);
     this.UsersService.deleteThisFile(filename).subscribe(response => {
+      alert ("File deleted successfully");
       this.showAllFiles();
       });
     }

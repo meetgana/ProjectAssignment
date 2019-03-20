@@ -39,7 +39,7 @@ export class UsersService {
   }
 
   deleteThisFile(filename) {
-    return this.http.get(`${this.uri}/file/` + filename);
+    return this.http.get(`${this.uri}/delete/` + filename);
   }
   
   showFileNames() {
