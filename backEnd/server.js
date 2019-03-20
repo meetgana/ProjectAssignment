@@ -23,9 +23,9 @@ mongoose.connect('mongodb://localhost:27017/users');
 let connection = mongoose.connection;
 connection.options = {};
 
-/* connection.once('open', () => {
+ connection.once('open', () => {
     console.log('MongoDB database connection established successfully!');
-*/
+
 router.route('/users').get((req, res) => {
     connection.db.collection("users", function (err, collection) {
         collection.find({}).toArray(function (err, users) {
@@ -55,19 +55,19 @@ router.route('/users/add').post((req, res) => {
 
 Grid.mongo = mongoose.mongo;
 //let gfs = new Grid("mongodb://localhost:27017/users", mongoose.mongo);
-let gfs = new Grid(connection, mongoose.mongo);
+let gfs = new Grid(connection.db, mongoose.mongo);
 
  var storage = GridFsStorage({
     url: "mongodb://localhost:27017/users",
 
-    filename: function(req, file, cb) {
-       cb(null, file.originalname);
-    },
-
-    metadata: function(req, file, cb) {
-        cb(null, file.description);
-     },
+    file: function(req, file) {
+        return {
+            filename: file.originalname,
+            metadata: req.body
+       };
+    }    
 });
+//root: "uploadFiles"
 
 let upload = multer({
     storage: storage
@@ -76,41 +76,52 @@ let upload = multer({
 // Route for file upload
 router.post('/upload', function (req, res) {
     upload(req,res, (err) => {
-        console.log(req);
+        console.log ("description ", req.body);
         if(err){
             res.json({error_code:1,err_desc:err});
             return;
        }
-        console.log ('Uploading a document ', req.params);
         res.json({error_code:0, error_desc: null, file_uploaded: true});
   });
 });
 
 router.route('/file/:filename').get((req, res) => {
     console.log ("Input file ", req.params.filename);
-
-    gfs.files.find({filename: req.params.filename}).toArray(function(err, files){
-        if(!files || files.length === 0){
+    let gfs = new Grid(connection.db, mongoose.mongo);
+    gfs.files.find({filename: req.params.filename}).toArray(function(err, outputFile){
+        if(!outputFile || outputFile.length === 0){
             return res.status(404).json({
                 responseCode: 1,
                 responseMessage: "error"
             });
         }
+        console.log("files: ", outputFile[0].filename.toString());
+        console.log("file id: ", outputFile[0]._id);
+        console.log("files: ",outputFile.length);
 
-        console.log("files: ",files[0].filename);
-        // create read stream
-    /*    const gridFSBucket = new mongoose.mongo.GridFSBucket(connection.db);
-        var readStream = gridFSBucket.openDownloadStreamByName(files[0].filename).
-                  pipe(fs.createReadStream('writefile'));
-        return readStream.pipe(res);
-        */
         var readstream = gfs.createReadStream({
-            filename: files[0].filename
+            filename: outputFile[0].filename.toString()        
         });
-        // set the proper content type 
-        res.set('Content-Type', files[0].contentType)
-        // Return response
-        return readstream.pipe(res); 
+
+        readstream.on('open',function(){
+            console.log("start..");
+        });//open
+        
+        readstream.on('data',function(chunk){
+            console.log('loading..');
+        });//loading
+        
+        readstream.on("end",function(){
+          console.log("ready");
+        });//end 
+
+        readstream.on('error', function (err) {
+            console.log('An error occurred!', err);
+        });
+
+        // res.set ('filename', files[0].filename);
+        res.set('Content-Type', outputFile[0].contentType);
+        return readstream.pipe(res);
     });
 });
 
@@ -118,7 +129,6 @@ router.route('/file/:filename').get((req, res) => {
 router.route('/files').get((req, res) => {
     let filesData = [];
     let count = 0;
- //   gfs.collection('uploadFiles'); // set the collection to look up into
 
     gfs.files.find({}).toArray((err, files) => {
         // Error checking
@@ -132,7 +142,7 @@ router.route('/files').get((req, res) => {
         // Loop through all the files and fetch the necessary information
         files.forEach((file) => {
             filesData[count++] = {
-              //  originalname: file.metadata.originalname,
+                description: file.metadata.description,
                 filename: file.filename,
                 contentType: file.contentType
             }
@@ -144,3 +154,5 @@ router.route('/files').get((req, res) => {
 app.use('/', router);
 
 app.listen (4000, ()=> console.log ('Express server is running'));
+
+});

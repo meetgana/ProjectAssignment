@@ -1,5 +1,5 @@
 export interface File {
-    originalname: string;
+    description: string;
     filename: string;
     contentType: string;
   }

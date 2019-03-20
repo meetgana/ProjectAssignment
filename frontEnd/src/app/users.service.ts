@@ -38,6 +38,10 @@ export class UsersService {
     { responseType: 'blob' });
   }
 
+  deleteThisFile(filename) {
+    return this.http.get(`${this.uri}/file/` + filename);
+  }
+  
   showFileNames() {
     return this.http.get<File[]>(`${this.uri}/files/`);
   }
